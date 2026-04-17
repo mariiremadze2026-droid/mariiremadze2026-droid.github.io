@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML GTA ONLINE (NO SERVER)</title>
+
+<style>
+body { margin:0; overflow:hidden; background:#111; font-family:Arial; }
+canvas { display:block; }
+
+#ui {
+  position:fixed;
+  top:10px; left:10px;
+  background:rgba(0,0,0,0.5);
+  padding:10px;
+  color:white;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+💰 Money: <span id="money">0</span><br>
+👥 Players: <span id="count">1</span><br>
+</div>
+
+<canvas id="c"></canvas>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 🌐 Fake ONLINE system (NO SERVER)
+const channel = new BroadcastChannel("gta-online");
+
+let id = Math.random().toString(36).substr(2,9);
+
+let players = {};
+let me = {
+  x: Math.random()*300,
+  y: Math.random()*300,
+  money: 0,
+  color: "lime"
+};
+
+players[id] = me;
+
+// send update
+function broadcast(){
+  channel.postMessage({type:"update", id, data:me});
+}
+
+// receive updates
+channel.onmessage = (e)=>{
+  if(e.data.type === "update"){
+    players[e.data.id] = e.data.data;
+  }
+
+  if(e.data.type === "remove"){
+    delete players[e.data.id];
+  }
+};
+
+// movement
+document.addEventListener("keydown",(e)=>{
+  let sp = 8;
+
+  if(e.key==="w") me.y -= sp;
+  if(e.key==="s") me.y += sp;
+  if(e.key==="a") me.x -= sp;
+  if(e.key==="d") me.x += sp;
+
+  if(e.key===" "){
+    me.money += 10;
+  }
+
+  broadcast();
+  updateUI();
+});
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for(let pid in players){
+    let p = players[pid];
+
+    ctx.fillStyle = pid === id ? "lime" : "red";
+    ctx.fillRect(p.x, p.y, 20,20);
+
+    ctx.fillStyle="white";
+    ctx.fillText(pid.slice(0,4), p.x, p.y-5);
+  }
+
+  document.getElementById("count").innerText = Object.keys(players).length;
+
+  requestAnimationFrame(draw);
+}
+
+function updateUI(){
+  document.getElementById("money").innerText = me.money;
+}
+
+// keep alive sync
+setInterval(()=>{
+  broadcast();
+},500);
+
+draw();
+updateUI();
+
+// remove on close
+window.onbeforeunload = ()=>{
+  channel.postMessage({type:"remove", id});
+};
+</script>
+
+</body>
+</html>
