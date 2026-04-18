@@ -257,8 +257,71 @@ document.getElementById("levelScreen").classList.remove("hidden");
 
 /* DRAW */
 function draw(){
-drawBackground();
+let particles = [];
 
+function initParticles(){
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+s:Math.random()*2+1
+});
+}
+}
+initParticles();
+
+function drawBackground(){
+let t=getTheme(level);
+
+/* BASE */
+if(t=="day"){
+ctx.fillStyle="#bfefff";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+/* 🌙 NIGHT + STARS */
+if(t=="night"){
+ctx.fillStyle="#070a1a";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#fff";
+for(let p of particles){
+ctx.fillRect(p.x,p.y,p.s,p.s);
+p.x += 0.2;
+if(p.x>canvas.width)p.x=0;
+}
+}
+
+/* 🌧️ RAIN */
+if(t=="rain"){
+ctx.fillStyle="#2b3a67";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.strokeStyle="rgba(255,255,255,0.5)";
+for(let i=0;i<50;i++){
+ctx.beginPath();
+ctx.moveTo(Math.random()*canvas.width,Math.random()*canvas.height);
+ctx.lineTo(Math.random()*canvas.width,Math.random()*canvas.height+10);
+ctx.stroke();
+}
+}
+
+/* 🌸 PINK GLOW */
+if(t=="pink"){
+ctx.fillStyle="#ffb6d5";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.shadowColor="#ff66cc";
+ctx.shadowBlur=20;
+}
+/* ☣️ ZOMBIE */
+if(t=="zombie"){
+ctx.fillStyle="#0b1a0b";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="rgba(0,255,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+}
 /* enemies */
 ctx.fillStyle="#000";
 for(let e of enemies){
