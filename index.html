@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Glow Swipe Ball</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Arial}
+
+canvas{display:block;width:100%;height:100%}
+
+#ui{
+position:fixed;top:0;left:0;width:100%;
+display:flex;justify-content:space-between;
+padding:12px;font-size:22px;
+font-weight:bold;color:white;z-index:10;
+text-shadow:0 0 10px black;
+}
+
+#menu,#gameOver{
+position:fixed;inset:0;display:flex;justify-content:center;align-items:center;
+background:rgba(0,0,0,.5)
+}
+
+.card{
+background:#111;color:white;padding:25px;border-radius:18px;
+text-align:center;width:90%;max-width:400px;
+box-shadow:0 0 30px rgba(0,255,255,0.3)
+}
+
+button{
+width:100%;padding:15px;margin-top:15px;
+border:none;border-radius:12px;
+background:linear-gradient(90deg,#00f5ff,#7a5cff);
+color:white;font-size:20px
+}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="ui">
+<div>🏆 <span id="score">0</span></div>
+<div>⭐ <span id="best">0</span></div>
+</div>
+
+<div id="menu">
+<div class="card">
+<h2>✨ GLOW MODE</h2>
+<p>ნათელი + სწრაფი ბურთი</p>
+<button onclick="startGame()">▶ დაწყება</button>
+</div>
+</div>
+
+<div id="gameOver" class="hidden">
+<div class="card">
+<h2>💥 დასრულდა</h2>
+<p>ქულა: <b id="finalScore">0</b></p>
+<button onclick="startGame()">🔄 თავიდან</button>
+</div>
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+addEventListener("resize",resize);
+resize();
+
+const scoreEl=document.getElementById("score");
+const bestEl=document.getElementById("best");
+const menu=document.getElementById("menu");
+const gameOver=document.getElementById("gameOver");
+const finalScore=document.getElementById("finalScore");
+
+let best=+localStorage.getItem("best")||0;
+bestEl.textContent=best;
+
+let running=false;
+let score=0;
+
+/* ⚡ faster physics */
+let gravity=0.95;
+let fallSpeed=12;
+
+let spawnTimer=0;
+
+const ball={
+x:0,y:0,r:20,
+vx:0,vy:0
+};
+
+let enemies=[];
+
+/* ✨ glowing colors */
+const colors=[
+"#00f5ff","#7a5cff","#ff3bff","#00ff85","#ffe600"
+];
+
+function reset(){
+score=0;
+fallSpeed=12;
+spawnTimer=0;
+enemies=[];
+scoreEl.textContent=0;
+
+ball.x=canvas.width/2;
+ball.y=canvas.height-160;
+ball.vx=0;
+ball.vy=-16; // 🔥 faster jump
+}
+
+function startGame(){
+reset();
+running=true;
+menu.classList.add("hidden");
+gameOver.classList.add("hidden");
+}
+
+/* swipe */
+let startX=0;
+
+canvas.addEventListener("touchstart",e=>{
+startX=e.touches[0].clientX;
+});
+
+canvas.addEventListener("touchmove",e=>{
+if(!running)return;
+let x=e.touches[0].clientX;
+ball.vx=(x-startX)*0.45; // ⚡ faster control
+startX=x;
+},{passive:true});
+
+let md=false;
+canvas.addEventListener("mousedown",e=>{
+md=true;
+startX=e.clientX;
+});
+canvas.addEventListener("mouseup",()=>md=false);
+
+canvas.addEventListener("mousemove",e=>{
+if(!md||!running)return;
+ball.vx=(e.clientX-startX)*0.45;
+startX=e.clientX;
+});
+
+function spawn(){
+enemies.push({
+x:Math.random()*(canvas.width-40),
+y:-60,
+w:40,h:50,
+c:colors[Math.floor(Math.random()*colors.length)]
+});
+}
+
+function drawBg(){
+let g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+g.addColorStop(0,"#0f2027");
+g.addColorStop(0.5,"#203a43");
+g.addColorStop(1,"#2c5364");
+ctx.fillStyle=g;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+/* ✨ glowing ball */
+function drawBall(){
+ctx.shadowBlur=25;
+ctx.shadowColor="#00f5ff";
+
+let grad=ctx.createRadialGradient(ball.x,ball.y,5,ball.x,ball.y,ball.r);
+grad.addColorStop(0,"white");
+grad.addColorStop(0.4,"#00f5ff");
+grad.addColorStop(1,"#7a5cff");
+
+ctx.fillStyle=grad;
+ctx.beginPath();
+ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);
+ctx.fill();
+
+ctx.shadowBlur=0;
+}
+
+/* glowing enemies */
+function drawEnemy(e){
+ctx.shadowBlur=15;
+ctx.shadowColor=e.c;
+
+ctx.fillStyle=e.c;
+ctx.fillRect(e.x,e.y,e.w,e.h);
+
+ctx.shadowBlur=0;
+}
+
+function update(){
+if(!running)return;
+
+ball.x+=ball.vx;
+ball.vx*=0.98;
+
+ball.vy+=gravity;
+ball.y+=ball.vy;
+
+/* walls */
+if(ball.x<ball.r){ball.x=ball.r;ball.vx*=-0.8}
+if(ball.x>canvas.width-ball.r){ball.x=canvas.width-ball.r;ball.vx*=-0.8}
+
+/* ✨ strong bounce */
+if(ball.y>canvas.height-ball.r){
+ball.y=canvas.height-ball.r;
+ball.vy*=-0.98;
+score++;
+fallSpeed+=0.4; // 🔥 faster difficulty
+scoreEl.textContent=score;
+}
+
+if(ball.y<ball.r){
+ball.y=ball.r;
+ball.vy=3;
+}
+
+/* spawn very fast */
+spawnTimer++;
+if(spawnTimer>10){
+spawnTimer=0;
+spawn();
+}
+
+for(let i=enemies.length-1;i>=0;i--){
+let e=enemies[i];
+e.y+=fallSpeed;
+
+/* collision */
+if(
+ball.x+ball.r>e.x &&
+ball.x-ball.r<e.x+e.w &&
+ball.y+ball.r>e.y &&
+ball.y-ball.r<e.y+e.h
+){
+end();
+}
+
+if(e.y>canvas.height+100) enemies.splice(i,1);
+}
+}
+
+function draw(){
+drawBg();
+for(let e of enemies) drawEnemy(e);
+drawBall();
+}
+
+function end(){
+running=false;
+
+if(score>best){
+best=score;
+localStorage.setItem("best",best);
+bestEl.textContent=best;
+}
+
+finalScore.textContent=score;
+gameOver.classList.remove("hidden");
+}
+
+function loop(){
+update();
+draw();
+requestAnimationFrame(loop);
+}
+loop();
+</script>
+
+</body>
+</html>
