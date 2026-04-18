@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Swipe Ball Levels</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Arial}
+canvas{display:block;width:100%;height:100%}
+
+#ui{
+position:fixed;top:0;left:0;width:100%;
+display:flex;justify-content:space-between;
+padding:12px;
+font-size:20px;
+font-weight:bold;
+z-index:10;
+color:#111;
+}
+
+#menu,#levelComplete{
+position:fixed;inset:0;
+display:flex;justify-content:center;align-items:center;
+background:rgba(0,0,0,.4);
+z-index:20;
+}
+
+.card{
+background:#fff;
+padding:25px;
+border-radius:20px;
+text-align:center;
+width:min(92%,420px)
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:12px;
+background:#111;
+color:#fff;
+font-size:18px
+}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="ui">
+<div>🏆 <span id="score">0</span></div>
+<div>⭐ <span id="stars">⭐⭐⭐</span></div>
+</div>
+
+<div id="menu">
+<div class="card">
+<h1>🎮 LEVEL GAME</h1>
+<button onclick="startGame()">▶ დაწყება</button>
+</div>
+</div>
+
+<div id="levelComplete" class="hidden">
+<div class="card">
+<h1 id="levelText">Level Complete</h1>
+<p id="starText">⭐⭐⭐</p>
+<button onclick="nextLevel()">➡ შემდეგი დონე</button>
+</div>
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+}
+addEventListener("resize",resize);
+resize();
+
+const scoreEl=document.getElementById("score");
+const starsEl=document.getElementById("stars");
+const levelText=document.getElementById("levelText");
+const starText=document.getElementById("starText");
+
+let level=1;
+let score=0;
+let target=100; // win score
+
+let running=false;
+
+const ball={
+x:0,y:0,r:22
+};
+
+let enemies=[];
+
+/* 🎨 LEVEL STYLES */
+function getBg(){
+if(level===1) return ["#87e7ff","#d8ff9e"];
+if(level===2) return ["#ff9a9e","#fad0c4"];
+if(level===3) return ["#a18cd1","#fbc2eb"];
+return ["#1e3c72","#2a5298"];
+}
+
+/* RESET */
+function reset(){
+score=0;
+enemies=[];
+scoreEl.textContent=0;
+
+ball.x=canvas.width/2;
+ball.y=canvas.height-140;
+}
+
+/* START */
+function startGame(){
+level=1;
+target=100;
+reset();
+running=true;
+document.getElementById("menu").classList.add("hidden");
+}
+
+/* NEXT LEVEL */
+function nextLevel(){
+level++;
+target+=80; // harder each level
+reset();
+running=true;
+document.getElementById("levelComplete").classList.add("hidden");
+}
+
+/* CONTROL */
+let sx=0,sy=0;
+
+canvas.addEventListener("touchstart",e=>{
+sx=e.touches[0].clientX;
+sy=e.touches[0].clientY;
+});
+
+canvas.addEventListener("touchmove",e=>{
+if(!running)return;
+
+let x=e.touches[0].clientX;
+let y=e.touches[0].clientY;
+
+ball.x += (x-sx)*1.5;
+ball.y += (y-sy)*1.5;
+
+sx=x; sy=y;
+},{passive:true});
+
+/* ENEMY */
+function spawn(){
+enemies.push({
+x:Math.random()*(canvas.width-40),
+y:-60,
+w:40,h:50,
+speed:3+level*1.2
+});
+}
+
+/* DRAW */
+function drawBall(){
+ctx.fillStyle="#111";
+ctx.beginPath();
+ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);
+ctx.fill();
+}
+
+function drawEnemy(e){
+ctx.fillStyle="#ff4d4d";
+ctx.fillRect(e.x,e.y,e.w,e.h);
+}
+
+/* LEVEL COMPLETE */
+function win(){
+running=false;
+
+let stars=1;
+if(score>target*0.7) stars=2;
+if(score>target) stars=3;
+
+starText.textContent="⭐".repeat(stars);
+levelText.textContent="Level "+level+" Complete";
+
+document.getElementById("levelComplete").classList.remove("hidden");
+}
+
+/* UPDATE */
+function update(){
+if(!running)return;
+
+/* spawn faster each level */
+if(Math.random()<0.03+level*0.01){
+spawn();
+}
+
+for(let i=enemies.length-1;i>=0;i--){
+let e=enemies[i];
+e.y+=e.speed;
+
+if(
+ball.x+ball.r>e.x &&
+ball.x-ball.r<e.x+e.w &&
+ball.y+ball.r>e.y &&
+ball.y-ball.r<e.y+e.h
+){
+running=false;
+location.reload();
+}
+
+if(e.y>canvas.height+60) enemies.splice(i,1);
+}
+
+/* score */
+score++;
+scoreEl.textContent=score;
+
+/* WIN CONDITION */
+if(score>=target){
+win();
+}
+}
+
+/* DRAW */
+function draw(){
+let bg=getBg();
+
+let g=ctx.createLinearGradient(0,0,0,canvas.height);
+g.addColorStop(0,bg[0]);
+g.addColorStop(1,bg[1]);
+
+ctx.fillStyle=g;
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+for(let e of enemies) drawEnemy(e);
+drawBall();
+}
+
+/* LOOP */
+function loop(){
+update();
+draw();
+requestAnimationFrame(loop);
+}
+loop();
+</script>
+
+</body>
+</html>
