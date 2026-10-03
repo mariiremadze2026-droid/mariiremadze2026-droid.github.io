@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>პერსონალი</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; }
+        header { background-color: #ffffff; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .back-btn { text-decoration: none; font-size: 20px; color: #2980b9; margin-right: 15px; }
+        h1 { font-size: 1.2rem; color: #2c3e50; }
+        .section { background: #ffffff; margin: 15px; padding: 20px; border-radius: 12px; }
+        .teacher-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 15px; display: flex; gap: 15px; }
+        .teacher-photo { width: 60px; height: 60px; background-color: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .subject-badge { background-color: #e8f4f8; color: #2980b9; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">⬅️ უკან</a>
+        <h1>პერსონალი</h1>
+    </header>
+
+    <div class="section">
+        <div class="teacher-card">
+            <div class="teacher-photo">👩‍🏫</div>
+            <div>
+                <h3 style="margin-bottom: 5px;">მაია მაისურაძე</h3>
+                <span class="subject-badge">მათემატიკა</span>
+                <p style="font-size: 0.9rem; margin-top: 5px;">გამოცდილება: 10 წელი</p>
+            </div>
+        </div>
+        <div class="teacher-card">
+            <div class="teacher-photo">👨‍🏫</div>
+            <div>
+                <h3 style="margin-bottom: 5px;">დავით დავითაძე</h3>
+                <span class="subject-badge">ისტორია</span>
+                <p style="font-size: 0.9rem; margin-top: 5px;">გამოცდილება: 8 წელი</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
