@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>კალენდარი</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f6f9; margin: 0; padding: 0; }
+        header { background: #fff; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; }
+        .back-btn { text-decoration: none; font-size: 20px; margin-right: 15px; }
+        .section { background: #fff; margin: 15px; padding: 20px; border-radius: 12px; }
+        .event-card { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .date-box { border: 2px solid #2980b9; border-radius: 8px; text-align: center; min-width: 60px; height: fit-content; }
+        .date-month { background: #2980b9; color: #fff; font-size: 0.8rem; padding: 2px 0; }
+        .date-day { font-size: 1.5rem; font-weight: bold; padding: 5px 0; color: #333; }
+        .event-details p { margin: 3px 0; font-size: 0.9rem; color: #555; }
+    </style>
+</head>
+<body>
+    <header><a href="index.html" class="back-btn">⬅️</a> <b>კალენდარი</b></header>
+    <div class="section">
+        <div class="event-card">
+            <div class="date-box">
+                <div class="date-month">მაისი</div>
+                <div class="date-day">25</div>
+            </div>
+            <div class="event-details">
+                <h3 style="margin: 0 0 5px 0;">ბოლო ზარი</h3>
+                <p>🕒 12:00 | 📍 სკოლის ეზო</p>
+                <p>მე-12 კლასელების გამოსაშვები ღონისძიება.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
