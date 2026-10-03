@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>სიახლეების ცენტრი</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; line-height: 1.6; }
+        
+        header { background-color: #ffffff; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .back-btn { text-decoration: none; font-size: 20px; color: #2980b9; margin-right: 15px; }
+        h1 { font-size: 1.2rem; color: #2c3e50; }
+
+        .section { background: #ffffff; margin: 15px; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+        /* კატეგორიების ფილტრი */
+        .categories-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; }
+        .categories-container::-webkit-scrollbar { display: none; }
+        .category-btn { background-color: #ecf0f1; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; white-space: nowrap; cursor: pointer; }
+        .category-btn.active { background-color: #2980b9; color: white; }
+
+        /* სიახლის ბარათი */
+        .news-card { background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .news-img { width: 100%; height: 180px; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #777; font-size: 1.2rem; position: relative; }
+        .news-content { padding: 15px; }
+        .news-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; color: #777; }
+        .news-category { background-color: #eaf2f8; color: #2980b9; padding: 4px 10px; border-radius: 12px; font-weight: bold; }
+        .news-title { font-size: 1.15rem; color: #2c3e50; margin-bottom: 8px; font-weight: bold; }
+        .news-desc { font-size: 0.95rem; color: #555; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .read-more { display: inline-block; background-color: #2980b9; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; width: 100%; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">⬅️ უკან</a>
+        <h1>📰 სიახლეების ცენტრი</h1>
+    </header>
+
+    <div class="section">
+        <!-- კატეგორიები -->
+        <div class="categories-container">
+            <button class="category-btn active">ყველა</button>
+            <button class="category-btn">სკოლის სიახლეები</button>
+            <button class="category-btn">ოლიმპიადები</button>
+            <button class="category-btn">კონკურსები</button>
+            <button class="category-btn">ექსკურსიები</button>
+            <button class="category-btn">სტუმრები</button>
+            <button class="category-btn">სასწავლო სიახლეები</button>
+        </div>
+
+        <!-- სიახლე 1 -->
+        <div class="news-card">
+            <div class="news-img">📸 ფოტო (ოლიმპიადა)</div>
+            <div class="news-content">
+                <div class="news-meta">
+                    <span class="news-category">ოლიმპიადები</span>
+                    <span>15 მაისი, 2024</span>
+                </div>
+                <div class="news-title">წარმატება რესპუბლიკურ ოლიმპიადაზე</div>
+                <div class="news-desc">
+                    ჩვენი სკოლის მე-10 კლასის მოსწავლეებმა მათემატიკის რესპუბლიკურ ოლიმპიადაში პირველი გუნდური ადგილი დაიკავეს. ვულოცავთ მათ ამ დიდ წარმატებას!
+                </div>
+                <a href="#" class="read-more">სრული სტატიის გახსნა ➡️</a>
+            </div>
+        </div>
+
+        <!-- სიახლე 2 -->
+        <div class="news-card">
+            <div class="news-img">📸 ფოტო (სტუმარი)</div>
+            <div class="news-content">
+                <div class="news-meta">
+                    <span class="news-category">სტუმრების ვიზიტები</span>
+                    <span>12 მაისი, 2024</span>
+                </div>
+                <div class="news-title">ცნობილი მწერლის ვიზიტი სკოლაში</div>
+                <div class="news-desc">
+                    დღეს ჩვენს სკოლას ესტუმრა თანამედროვე ქართველი მწერალი, რომელმაც მოსწავლეებთან საინტერესო დისკუსია გამართა ლიტერატურის მნიშვნელობაზე.
+                </div>
+                <a href="#" class="read-more">სრული სტატიის გახსნა ➡️</a>
+            </div>
+        </div>
+        
+    </div>
+
+</body>
+</html>
