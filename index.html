@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>სკოლის ოფიციალური ვებგვერდი</title>
+    <style>
+        /* ზოგადი სტილები */
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2980b9;
+            --accent-color: #f1c40f;
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* ზედა პანელი - ზონებისთვის */
+        .top-bar {
+            background-color: #222;
+            color: white;
+            padding: 5px 5%;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 12px;
+            gap: 15px;
+        }
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+        }
+        .top-bar a:hover { color: var(--accent-color); }
+
+        /* მთავარი ნავიგაცია */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* მთავარი ბანერი (Hero Section) */
+        .hero {
+            background: linear-gradient(rgba(26, 82, 118, 0.7), rgba(41, 128, 185, 0.7)), url('https://via.placeholder.com/1500x600?text=School+Building') center/cover;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        /* "რატომ ჩვენი სკოლა" და სწრაფი ღილაკები */
+        .features {
+            padding: 50px 5%;
+            text-align: center;
+        }
+
+        .features h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        .card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        /* სიახლეები და ღონისძიებები */
+        .news-events {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 50px 5%;
+            background-color: white;
+        }
+
+        .section-half {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .section-half h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .news-item, .event-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .date-box {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: 70px;
+            font-weight: bold;
+        }
+
+        /* ფუტერი (Contact) */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 30px 5%;
+            margin-top: 30px;
+        }
+
+        /* რესპონსივი დიზაინი (მობილურებისთვის) */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary-color);
+                padding: 20px;
+                text-align: center;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- დახურული ზონები და ადმინ პანელი -->
+    <div class="top-bar">
+        <a href="#student-zone">👨‍🎓 Student Zone</a>
+        <a href="#teacher-zone">👩‍🏫 Teacher Zone</a>
+        <a href="#admin-panel">🔒 Admin Panel</a>
+    </div>
+
+    <!-- მთავარი ნავიგაცია -->
+    <header>
+        <div class="logo">
+            🏫 სკოლის ლოგო
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+        <nav>
+            <ul id="nav-menu">
+                <li><a href="#home">მთავარი</a></li>
+                <li><a href="#about">სკოლის შესახებ</a></li>
+                <li><a href="#director">დირექტორი</a></li>
+                <li><a href="#teachers">მასწავლებლები</a></li>
+                <li><a href="#library">ბიბლიოთეკა</a></li>
+                <li><a href="#news">სიახლეები</a></li>
+                <li><a href="#contact">კონტაქტი</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- მთავარი ბანერი -->
+    <section class="hero" id="home">
+        <h1>კეთილი იყოს თქვენი მობრძანება ჩვენს სკოლაში!</h1>
+        <p>ადგილი, სადაც იწყება თქვენი შვილის ნათელი მომავალი. ჩვენ ვუზრუნველყოფთ საუკეთესო განათლებას და უსაფრთხო გარემოს.</p>
+        <button style="padding: 10px 20px; font-size: 16px; background-color: var(--accent-color); border: none; cursor: pointer; font-weight: bold; border-radius: 5px;">გაიგეთ მეტი</button>
+    </section>
+
+    <!-- რატომ ჩვენი სკოლა / სწრაფი ღილაკები -->
+    <section class="features" id="about">
+        <h2>რატომ ჩვენი სკოლა? / სწრაფი ბმულები</h2>
+        <div class="grid-cards">
+            <div class="card">
+                <h3>🏛️ ისტორია და მისია</h3>
+                <p>გაეცანით ჩვენი სკოლის დაარსების ისტორიას და მთავარ ღირებულებებს.</p>
+            </div>
+            <div class="card">
+                <h3>💡 შენი იდეა სკოლისთვის</h3>
+                <p>გაქვს ინოვაციური იდეა? გამოგვიგზავნე და მიიღე მხარდაჭერა.</p>
+            </div>
+            <div class="card">
+                <h3>🏆 მოსწავლეთა მიღწევები</h3>
+                <p>ოლიმპიადების გამარჯვებულები და წარმატებული პროექტები (Hall of Fame).</p>
+            </div>
+            <div class="card">
+                <h3>🚌 ექსკურსიები</h3>
+                <p>დაგეგმილი გასვლითი ღონისძიებები და წინა ექსკურსიების ფოტოები.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- სიახლეები და კალენდარი -->
+    <section class="news-events">
+        <div class="section-half" id="news">
+            <h2>ბოლო სიახლეები</h2>
+            
+            <div class="news-item">
+                <img src="https://via.placeholder.com/100" alt="News Image" style="border-radius: 5px;">
+                <div>
+                    <h4 style="color: var(--secondary-color);">ოლიმპიადის გამარჯვებულები</h4>
+                    <p style="font-size: 14px; color: #555;">ჩვენი სკოლის მოსწავლეებმა მათემატიკის ოლიმპიადაში პირველი ადგილი დაიკავეს...</p>
+                    <a href="#" style="font-size: 12px; color: var(--primary-color);">სრულად წაკითხვა</a>
+                </div>
+            </div>
+
+            <div class="news-item">
+                <img src="https://via.placeholder.com/100" alt="News Image" style="border-radius: 5px;">
+                <div>
+                    <h4 style="color: var(--secondary-color);">მნიშვნელოვანი განცხადება</h4>
+                    <p style="font-size: 14px; color: #555;">საგაზაფხულო არდადეგების განრიგში შევიდა მცირე ცვლილება...</p>
+                    <a href="#" style="font-size: 12px; color: var(--primary-color);">სრულად წაკითხვა</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-half" id="events">
+            <h2>ღონისძიებების კალენდარი</h2>
+            
+            <div class="event-item">
+                <div class="date-box">15<br>ოქტ</div>
+                <div>
+                    <h4>შემოდგომის ფესტივალი</h4>
+                    <p style="font-size: 14px;">ადგილი: სკოლის ეზო | საათი: 14:00</p>
+                </div>
+            </div>
+
+            <div class="event-item">
+                <div class="date-box">22<br>ოქტ</div>
+                <div>
+                    <h4>შეხვედრა ცნობილ მწერალთან</h4>
+                    <p style="font-size: 14px;">ადგილი: ბიბლიოთეკა | საათი: 15:30</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ფუტერი -->
+    <footer id="contact">
+        <h3>საკონტაქტო ინფორმაცია</h3>
+        <p>📍 მისამართი: თბილისი, სატესტო ქუჩა #1</p>
+        <p>📞 ტელეფონი: +995 555 12 34 56 | ✉️ ელფოსტა: info@school.ge</p>
+        <p style="margin-top: 15px; font-size: 14px;">© 2026 სკოლის ოფიციალური ვებგვერდი. ყველა უფლება დაცულია.</p>
+    </footer>
+
+    <!-- მარტივი სკრიპტი მობილურის მენიუსთვის -->
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("nav-menu");
+            menu.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>
